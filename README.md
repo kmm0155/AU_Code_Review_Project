@@ -10,6 +10,6 @@ CODE REFERENCED: https://github.com/qiime2/q2-diversity
 For a detailed description on this code review, please see Review.doc.
 
 All required components for re-creating my analysis are listed as:
-1) My associated script for this project
+1) Code_Review.txt (my associated script for this project)
 2) Manifest.csv (called on in my script)
 3) faiths. (final output)
