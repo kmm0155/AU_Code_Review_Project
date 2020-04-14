@@ -10,8 +10,8 @@ CODE REFERENCED: https://github.com/qiime2/q2-diversity
 For a detailed description on this code review, please see Review.doc.
 
 All required components for re-creating my analysis are listed as:
-1) Menke et. al 2019 (paper used for this review)
-2)Code_Review.txt (my associated script for this project)
+1) Wildlife_Ref_Paper.pdf (Menke et. al 2019- paper used for this review)
+2) Code_Review.txt (my associated script for this project)
 3) Manifest.csv (called on in my script)
 4) All fastq files I used in my script (2-8)
 5) alpha-diversity.tsv (final output)
