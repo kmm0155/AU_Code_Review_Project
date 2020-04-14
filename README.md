@@ -12,5 +12,5 @@ For a detailed description on this code review, please see Review.doc.
 All required components for re-creating my analysis are listed as:
 1) Code_Review.txt (my associated script for this project)
 2) Manifest.csv (called on in my script)
-3) All fasta files I used in my script
+3) All fastq files I used in my script (2-8)
 4) alpha-diversity.tsv (final output)
