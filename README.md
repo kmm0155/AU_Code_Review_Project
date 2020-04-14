@@ -7,7 +7,7 @@ OVERVIEW: This project involves reviewing code associated with a peer-reviewed s
 PAPER: https://bioone.org/journals/Wildlife-Biology/volume-2019/issue-1/wlb.00503/Impact-of-winter-enclosures-on-the-gut-bacterial-microbiota-of/10.2981/wlb.00503.full
 CODE REFERENCED: https://github.com/qiime2/q2-diversity
 
-For a detailed description on this code review, please see Review.doc.
+For a detailed description on this code review, please see Murphy_Code_Review.docx.
 
 All required components for re-creating my analysis are listed as:
 1) Wildlife_Ref_Paper.pdf (Menke et. al 2019- paper used for this review)
