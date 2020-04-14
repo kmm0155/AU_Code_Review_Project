@@ -1,0 +1,93 @@
+#!/bin/bash
+     
+#Activate qiime2
+
+source activate qiime2-2020.2
+	 
+#Navigate into the location where the sequence files are located
+
+cd Desktop		
+		
+#create qiime aritfact
+
+qiime tools import \
+	--type 'SampleData[PairedEndSequencesWithQuality]' \
+	--input-path /Users/kaitlynmurphy/Desktop/red_deer_microbiome_submission/Manifest.csv \
+	--input-format PairedEndFastqManifestPhred33 \
+	--output-path paired-end-seqs1.qza 
+	 
+#use this to peek at the data
+
+qiime tools peek paired-end-seqs1.qza
+
+#denoises sequences, dereplicates them, and filters chimeras
+#https://docs.qiime2.org/2018.6/plugins/available/dada2/denoise-pyro/
+
+qiime dada2 denoise-paired \
+	--i-demultiplexed-seqs paired-end-seqs1.qza \
+	--p-trim-left-f 23 \
+	--p-trim-left-r 20 \
+	--p-trunc-len-f 200 \
+	--p-trunc-len-r 200 \
+	--p-chimera-method consensus \
+	--o-representative-sequences rep-seqs-denoise.qza \
+	--o-table rep_seq_feature_table.qza \
+	--o-denoising-stats denoising-stats.gza \
+	--verbose
+	
+#Filter features from feature table
+#features must be a minimum sum of 20 across all samples and must be present in at least 2 samples
+#https://docs.qiime2.org/2019.7/tutorials/filtering/
+	
+qiime feature-table filter-features \
+	--i-table rep_seq_feature_table.qza \
+	--p-min-frequency 20 \
+	--p-min-samples 2 \
+	--o-filtered-table rep_seq_feature_table2.qza
+	
+#Now filter sequences to match table 
+#https://docs.qiime2.org/2018.8/plugins/available/feature-table/filter-seqs/
+
+qiime feature-table filter-seqs \
+	--i-data rep-seqs-denoise.qza \
+	--i-table rep_seq_feature_table2.qza \
+	--o-filtered-data rep-seqs-filtered.qza 
+	
+	if [ ! -f rep-seqs-filtered.qza ];
+	then
+		echo "File not found!" && exit 0
+	else
+	continue
+	fi
+
+#Taxonomy Classification and taxonomic analyses
+#https://www.arb-silva.de/fileadmin/silva_databases/qiime/Silva_132_release.zip
+#https://docs.qiime2.org/2018.6/tutorials/feature-classifier/
+#https://forum.qiime2.org/t/silva-132-classifiers/3698
+#https://www.dropbox.com/s/5tv5uk95pk3ukwf/7_level_taxonomy.qza?dl=0
+	
+#Creating a phylogenetic tree
+#https://github.com/shenjean/Qiime2-workflow/wiki/Step-6:-Generate-a-tree-for-phylogenetic-diversity-analyses
+
+qiime phylogeny align-to-tree-mafft-fasttree \
+	--i-sequences rep-seqs-filtered.qza \
+	--o-alignment aligned.qza \
+	--o-masked-alignment masked.qza \
+	--o-tree unrooted-tree.qza \
+	--o-rooted-tree rooted-tree.qza
+
+#Faith's phylogenetic diversity
+#https://forum.qiime2.org/t/alpha-and-beta-diversity-explanations-and-commands/2282
+
+qiime diversity alpha-phylogenetic \
+  --i-table rep_seq_feature_table2.qza \
+  --i-phylogeny rooted-tree.qza \
+  --p-metric faith_pd \
+  --o-alpha-diversity faith_pd_vector.qza
+
+#Exports file in tsv format
+
+qiime tools export \
+  --input-path faith_pd_vector.qza \
+  --output-path faiths
+    	
